@@ -1,0 +1,40 @@
+
+
+mapscripts ResetArea_MapScripts {}
+
+script ResetArea_SelectBonus{
+
+    lockall
+    buffernumberstring(STR_VAR_1, VAR_ACHIEVEMENT_POINTS)
+    msgbox("You have {STR_VAR_1} reset points.")
+    releaseall
+
+}
+
+script ResetArea_GainPointDebug{
+    lockall
+    addvar(VAR_ACHIEVEMENT_POINTS,1)
+    buffernumberstring(STR_VAR_1, VAR_ACHIEVEMENT_POINTS)
+    msgbox("One point added.")
+    msgbox("You now have {STR_VAR_1} reset points.")
+    releaseall
+
+}
+
+script ResetArea_ResetPoints{
+    lockall
+    msgbox("Would you like to reset your achievement points?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        setvar(VAR_ACHIEVEMENT_POINTS,0)
+        msgbox("Points reset.")
+    }
+    releaseall
+
+}
+
+script ResetArea_RareCandySoruce{
+    lockall
+    msgbox("Here are some rare candies")
+    additem(ITEM_RARE_CANDY, 99)
+    releaseall
+}

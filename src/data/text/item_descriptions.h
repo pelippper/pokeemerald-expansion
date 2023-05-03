@@ -3912,3 +3912,8 @@ static const u8 sBerserkGene[] = _(
     "Sharply boosts\n"
     "Attack, but causes\n"
     "lasting confusion.");
+
+static const u8 sCandyBagDesc[] = (
+    "A bag\n"
+    "which levels\n"
+    "your pokemon.");
