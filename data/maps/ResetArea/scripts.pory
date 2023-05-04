@@ -34,7 +34,58 @@ script ResetArea_ResetPoints{
 
 script ResetArea_RareCandySoruce{
     lockall
-    msgbox("Here are some rare candies")
+    msgbox(format("Here are some useful items"))
     additem(ITEM_RARE_CANDY, 99)
+    msgbox(format("given rare candies"))
+    additem(ITEM_CANDY_BAG, 1)
+    msgbox(format("given candy bag"))
+    additem(ITEM_MAX_REPEL, 99)
+    msgbox(format("given max repels"))
+    if( (var(VAR_BIRCH_LAB_STATE) == BIRCH_LAB_STATE_RECEIVED_POKEDEX) ){
+        additem(ITEM_MASTER_BALL, 99)
+        msgbox(format("given master balls"))
+    }
+    else{
+        msgbox(format("come back later for master balls"))
+    }
+    
     releaseall
+}
+
+script ResetArea_BuyStarterSet2{
+    lockall
+    if((var(VAR_ACHIEVEMENT_POINTS) >= STARTER_SET_2_UNLOCK_AMOUNT) && !(flag(FLAG_STARTER_SET_2_UNLOCK))){
+        buffernumberstring(STR_VAR_1, STARTER_SET_2_UNLOCK_AMOUNT)
+        msgbox("Spend {STR_VAR_1} points to unlock new starter set?", MSGBOX_YESNO)
+        if(var(VAR_RESULT) == YES){
+            subvar(VAR_ACHIEVEMENT_POINTS, 50)
+            setflag(FLAG_STARTER_SET_2_UNLOCK)
+            setvar(VAR_STARTER_SET, STARTER_SET_2)
+            releaseall
+        }
+    }
+    else{
+        if((var(VAR_ACHIEVEMENT_POINTS )< STARTER_SET_2_UNLOCK_AMOUNT) && !(flag(FLAG_STARTER_SET_2_UNLOCK))){
+            msgbox("You don't have enough points")
+            releaseall
+        }
+        if(flag(FLAG_STARTER_SET_2_UNLOCK)){
+            msgbox("You've already unlocked this")
+            msgbox("Would you like to swap between starter sets?", MSGBOX_YESNO)
+            if(var(VAR_RESULT) == YES){
+                if(var(VAR_STARTER_SET ) == STARTER_SET_1){
+                    setvar(VAR_STARTER_SET, STARTER_SET_2)
+                    msgbox("Starter set switched to set 2.")
+                } 
+                elif(var(VAR_STARTER_SET) == STARTER_SET_2){
+                    setvar(VAR_STARTER_SET, STARTER_SET_1)
+                    msgbox("Starter set switched to set 1.")
+                }
+
+            }
+            releaseall
+        }
+        
+    }
+    
 }

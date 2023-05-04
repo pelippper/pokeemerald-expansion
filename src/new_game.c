@@ -61,6 +61,12 @@ static const struct ContestWinner sContestWinnerPicDummy =
     .trainerName = _("")
 };
 
+struct DataToRetain {
+    u32 achievementPoints;
+    u32 starterSetVar;
+    bool8 starterSetUnlockFlag;
+};
+
 void SetTrainerId(u32 trainerId, u8 *dst)
 {
     dst[0] = trainerId;
@@ -149,10 +155,14 @@ void ResetMenuAndMonGlobals(void)
 void NewGameInitData(void)
 {
     u32 achievementPoints = VarGet(VAR_ACHIEVEMENT_POINTS);
+    u32 starterSetVar = VarGet(VAR_STARTER_SET);
+    bool8 starterSet2UnlockFlag = FlagGet(FLAG_STARTER_SET_2_UNLOCK);
+
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
         RtcReset();
-    
     gDifferentSaveFile = TRUE;
+    //FlagClear(FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK);
+    //FlagClear(FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK);
     gSaveBlock2Ptr->encryptionKey = 0;
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
@@ -205,7 +215,13 @@ void NewGameInitData(void)
     WipeTrainerNameRecords();
     ResetTrainerHillResults();
     ResetContestLinkResults();
+    
     VarSet(VAR_ACHIEVEMENT_POINTS, achievementPoints);
+    VarSet(VAR_STARTER_SET, starterSetVar);
+    if(starterSet2UnlockFlag){
+        FlagSet(FLAG_STARTER_SET_2_UNLOCK);
+    }
+    
 
 }
 

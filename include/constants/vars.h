@@ -133,11 +133,17 @@
 #define VAR_ROUTE119_STATE                               0x4072
 #define VAR_ROUTE120_STATE                               0x4073 // Unused Var
 #define VAR_ROUTE121_STATE                               0x4074
-#define VAR_ROUTE122_STATE                               0x4075 // Unused Var
-#define VAR_ROUTE123_STATE                               0x4076 // Unused Var
-#define VAR_ROUTE124_STATE                               0x4077 // Unused Var
-#define VAR_ROUTE125_STATE                               0x4078 // Unused Var
-#define VAR_ROUTE126_STATE                               0x4079 // Unused Var
+
+
+//nuzlocke first pokemon only vars
+#define VAR_WILD_PKMN_ROUTE_SEEN_0                       0x4075 // Unused Var, nuzlocke check var
+#define VAR_WILD_PKMN_ROUTE_SEEN_1                       0x4076 // Unused Var, nuzlocke check var
+#define VAR_WILD_PKMN_ROUTE_SEEN_2                       0x4077 // Unused Var, nuzlocke check var
+#define VAR_WILD_PKMN_ROUTE_SEEN_3                       0x4078 // Unused Var, nuzlocke check var
+#define VAR_WILD_PKMN_ROUTE_SEEN_4                       0x4079 // Unused Var, nuzlocke check var
+
+
+
 #define VAR_ROUTE127_STATE                               0x407A // Unused Var
 #define VAR_ROUTE128_STATE                               0x407B
 #define VAR_ROUTE129_STATE                               0x407C // Unused Var
@@ -267,14 +273,21 @@
 
 // these are the variables I'll use for achievement points which don't get cleared each run.
 #define VAR_UNUSED_0x40F7                                0x40F7 // Unused Var
-#define VAR_ACHIEVEMENT_POINTS                                 0x40F8 // Unused Var, achievement points
-#define VAR_UNUSED_0x40F9                                0x40F9 // Unused Var
+#define VAR_ACHIEVEMENT_POINTS                           0x40F8 // Unused Var, achievement points
+#define VAR_STARTER_SET                                  0x40F9 // Unused Var, which starter set we are using.
 #define VAR_UNUSED_0x40FA                                0x40FA // Unused Var
 #define VAR_UNUSED_0x40FB                                0x40FB // Unused Var
 #define VAR_UNUSED_0x40FC                                0x40FC // Unused Var
 #define VAR_UNUSED_0x40FD                                0x40FD // Unused Var
 #define VAR_UNUSED_0x40FE                                0x40FE // Unused Var
 #define VAR_UNUSED_0x40FF                                0x40FF // Unused Var
+
+#define STARTER_SET_1                                    0 // default starter set
+#define STARTER_SET_2                                    1 // first starter set unlock
+#define STARTER_SET_3                                    2 // second starter set unlock
+
+#define STARTER_SET_2_UNLOCK_AMOUNT                      50 //number of points to unlock starter set 2
+#define BIRCH_LAB_STATE_RECEIVED_POKEDEX                 5 //did we receive pokedex and pokeballs from birch? yes if VAR_BIRCH_LAB_STATE == 5
 
 #define VARS_END                                         0x40FF
 #define VARS_COUNT                                       (VARS_END - VARS_START + 1)

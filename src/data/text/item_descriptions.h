@@ -3913,7 +3913,7 @@ static const u8 sBerserkGene[] = _(
     "Attack, but causes\n"
     "lasting confusion.");
 
-static const u8 sCandyBagDesc[] = (
+static const u8 sCandyBagDesc[] = _(
     "A bag\n"
     "which levels\n"
     "your pokemon.");

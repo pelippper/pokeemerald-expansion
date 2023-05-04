@@ -62,6 +62,7 @@
 #include "battle_util.h"
 #include "constants/pokemon.h"
 #include "config/battle.h"
+#include "new_game.h"
 
 // Helper for accessing command arguments and advancing gBattlescriptCurrInstr.
 //
@@ -611,6 +612,8 @@ static void Cmd_jumpifoppositegenders(void);
 static void Cmd_unused(void);
 static void Cmd_tryworryseed(void);
 static void Cmd_callnative(void);
+//static void CompactPartySpritesBSC(void);
+//static void CompactPartySlotsBSC(void);
 
 void (* const gBattleScriptingCommandsTable[])(void) =
 {
@@ -3935,7 +3938,30 @@ static void Cmd_clearstatusfromeffect(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
     gBattleScripting.multihitMoveEffect = 0;
 }
+s16 CompactPartySlotsBSC(void)
+{
+    s16 retVal = -1;
+    u16 i, last;
 
+    for (i = 0, last = 0; i < PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
+        if (species != SPECIES_NONE)
+        {
+            if (i != last)
+                gPlayerParty[last] = gPlayerParty[i];
+            last++;
+        }
+        else if (retVal == -1)
+        {
+            retVal = i;
+        }
+    }
+    for (; last < PARTY_SIZE; last++)
+        ZeroMonData(&gPlayerParty[last]);
+
+    return retVal;
+}
 static void Cmd_tryfaintmon(void)
 {
     CMD_ARGS(u8 battler, bool8 isSpikes, const u8 *instr);
@@ -3984,8 +4010,19 @@ static void Cmd_tryfaintmon(void)
                 gHitMarker |= HITMARKER_PLAYER_FAINTED;
                 if (gBattleResults.playerFaintCounter < 255)
                     gBattleResults.playerFaintCounter++;
+                
+
                 AdjustFriendshipOnBattleFaint(gActiveBattler);
+
+                //ZeroMonData(&gPlayerParty[gActiveBattler]);
+
+                //CompactPartySlotsBSC();
+
+                //CalculatePlayerPartyCount();
+
+                //SetMonData(&gPlayerParty[gActiveBattler], MON_DATA_SPECIES_OR_EGG, SPECIES_EGG);
                 gSideTimers[B_SIDE_PLAYER].retaliateTimer = 2;
+
             }
             else
             {
@@ -3993,6 +4030,9 @@ static void Cmd_tryfaintmon(void)
                     gBattleResults.opponentFaintCounter++;
                 gBattleResults.lastOpponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_SPECIES, NULL);
                 gSideTimers[B_SIDE_OPPONENT].retaliateTimer = 2;
+
+                
+                //gAbsentBattlerFlags &= ~(gBitTable[battlerId]);
             }
             if ((gHitMarker & HITMARKER_DESTINYBOND) && gBattleMons[gBattlerAttacker].hp != 0)
             {
@@ -4018,12 +4058,15 @@ static void Cmd_tryfaintmon(void)
 
                 PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].moves[moveIndex])
             }
+            
         }
         else
         {
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
+        
     }
+    
 }
 
 static void Cmd_dofaintanimation(void)
@@ -4622,7 +4665,9 @@ static bool32 NoAliveMonsForPlayer(void)
             }
         }
     }
-
+    if(HP_count == 0){
+        NewGameInitData();
+    }
     return (HP_count == 0);
 }
 
@@ -5095,10 +5140,22 @@ static void Cmd_return(void)
 static void Cmd_end(void)
 {
     CMD_ARGS();
-
+    s32 i;
     if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
         BattleArena_AddSkillPoints(gBattlerAttacker);
 
+    if(NoAliveMonsForOpponent()){
+        for (i = 0; i < PARTY_SIZE; i++){
+            if(gPlayerParty[i].hp == 0){
+                ZeroMonData(&gPlayerParty[i]);
+                CompactPartySlotsBSC();
+                CalculatePlayerPartyCount();
+            }
+        }
+    }
+    if(NoAliveMonsForPlayer()){
+        NewGameInitData();
+    }
     gMoveResultFlags = 0;
     gActiveBattler = 0;
     gCurrentActionFuncId = B_ACTION_TRY_FINISH;
@@ -5107,7 +5164,21 @@ static void Cmd_end(void)
 static void Cmd_end2(void)
 {
     CMD_ARGS();
+    s32 i;
+    if(NoAliveMonsForOpponent()){
+        for (i = 0; i < PARTY_SIZE; i++){
+            if(gPlayerParty[i].hp == 0){
+                ZeroMonData(&gPlayerParty[i]);
+                CompactPartySlotsBSC();
+                CalculatePlayerPartyCount();
+            }
+        }
+    }
+    if(NoAliveMonsForPlayer()){
+        NewGameInitData();
+    }
 
+    
     gActiveBattler = 0;
     gCurrentActionFuncId = B_ACTION_TRY_FINISH;
 }
@@ -5116,7 +5187,6 @@ static void Cmd_end2(void)
 static void Cmd_end3(void)
 {
     CMD_ARGS();
-
     BattleScriptPop();
     if (gBattleResources->battleCallbackStack->size != 0)
         gBattleResources->battleCallbackStack->size--;

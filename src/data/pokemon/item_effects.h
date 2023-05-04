@@ -509,6 +509,7 @@ const u8 *const gItemEffectTable[ITEMS_COUNT] =
     [ITEM_SWIFT_FEATHER]      = gItemEffect_SpeedFeather,
 
     // Candy
+    [ITEM_CANDY_BAG]          = gItemEffect_RareCandy,  
     [ITEM_RARE_CANDY]         = gItemEffect_RareCandy,
     [ITEM_EXP_CANDY_XS]       = gItemEffect_RareCandy,
     [ITEM_EXP_CANDY_S]        = gItemEffect_RareCandy,

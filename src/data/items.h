@@ -10343,7 +10343,7 @@ const struct Item gItems[] =
         .flingPower = 10,
     },
 
-    [ITEM_CANDY_BAG] = 
+    [ITEM_CANDY_BAG] = //copied from user kiiri in pret discord
     {
         .name = _("Candy Bag"),
         .itemId = ITEM_CANDY_BAG,

@@ -4518,7 +4518,11 @@ void ItemUseCB_Medicine(u8 taskId, TaskFunc task)
     {
         gPartyMenuUseExitCallback = FALSE;
         PlaySE(SE_SELECT);
-        DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        //DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        if (canHeal && (GetMonData(mon, MON_DATA_HP) == 0))
+            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
+        else
+            DisplayPartyMenuMessage(gText_WontHaveEffect, TRUE);
         ScheduleBgCopyTilemapToVram(2);
         gTasks[taskId].func = task;
     }
@@ -5311,8 +5315,10 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
             targetSpecies = GetEvolutionTargetSpecies(mon, EVO_MODE_NORMAL, ITEM_NONE, NULL);
 
         if (targetSpecies != SPECIES_NONE)
-        {
-            RemoveBagItem(gSpecialVar_ItemId, 1);
+        {  
+            if(!(gSpecialVar_ItemId == ITEM_CANDY_BAG)){
+                RemoveBagItem(gSpecialVar_ItemId, 1);
+            }
             FreePartyPointers();
             gCB2_AfterEvolution = gPartyMenu.exitCallback;
             BeginEvolutionScene(mon, targetSpecies, TRUE, gPartyMenu.slotId);
@@ -5331,7 +5337,9 @@ void ItemUseCB_RareCandy(u8 taskId, TaskFunc task)
         sFinalLevel = GetMonData(mon, MON_DATA_LEVEL, NULL);
         gPartyMenuUseExitCallback = TRUE;
         UpdateMonDisplayInfoAfterRareCandy(gPartyMenu.slotId, mon);
-        RemoveBagItem(gSpecialVar_ItemId, 1);
+        if(!(gSpecialVar_ItemId == ITEM_CANDY_BAG)){
+                RemoveBagItem(gSpecialVar_ItemId, 1);
+            }
         GetMonNickname(mon, gStringVar1);
         if (sFinalLevel > sInitialLevel)
         {

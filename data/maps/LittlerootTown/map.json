@@ -153,6 +153,13 @@
       "elevation": 0,
       "dest_map": "MAP_RESET_AREA",
       "dest_warp_id": "0"
+    },
+    {
+      "x": 22,
+      "y": 6,
+      "elevation": 0,
+      "dest_map": "MAP_LITTLEROOT_TOWN",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

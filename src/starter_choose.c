@@ -117,6 +117,13 @@ static const u16 sStarterMon[STARTER_MON_COUNT] =
     SPECIES_GOLDEEN,
 };
 
+static const u16 sStarterMon2[STARTER_MON_COUNT] =
+{
+    SPECIES_VOLTORB_HISUIAN,
+    SPECIES_FLETCHLING,
+    SPECIES_SPHEAL,
+};
+
 static const struct BgTemplate sBgTemplates[3] =
 {
     {
@@ -352,7 +359,16 @@ u16 GetStarterPokemon(u16 chosenStarterId)
 {
     if (chosenStarterId > STARTER_MON_COUNT)
         chosenStarterId = 0;
-    return sStarterMon[chosenStarterId];
+    if (VarGet(VAR_STARTER_SET) == STARTER_SET_1){
+        return sStarterMon[chosenStarterId];
+    }
+    else if(VarGet(VAR_STARTER_SET) == STARTER_SET_2){
+        return sStarterMon2[chosenStarterId];
+    }
+    else{
+        return sStarterMon[chosenStarterId];
+    }
+    
 }
 
 static void VblankCB_StarterChoose(void)
